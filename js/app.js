@@ -145,6 +145,7 @@ function initDisciplina() {
   const container = document.getElementById('lessons-list');
   const titleEl = document.getElementById('discipline-title');
   const breadcrumbEl = document.getElementById('breadcrumb-discipline');
+  const progressEl = document.getElementById('discipline-progress');
 
   if (!d) {
     if (typeof Router !== 'undefined') Router.navigateHome();
@@ -160,6 +161,7 @@ function initDisciplina() {
       if (!discipline) {
         if (titleEl) titleEl.textContent = 'Disciplina não encontrada';
         if (breadcrumbEl) breadcrumbEl.innerHTML = '<a href="index.html" class="iss-link-muted">Home</a>';
+        if (progressEl) progressEl.textContent = '';
         if (container) container.innerHTML = '<p class="iss-text-muted mb-4">Esta disciplina não existe.</p><a href="index.html" class="iss-link hover:underline">Voltar à página inicial</a>';
         return;
       }
@@ -173,6 +175,7 @@ function initDisciplina() {
             <span>${escapeHtml(discipline.title)}</span>
           `;
         }
+        if (progressEl) progressEl.textContent = '';
         if (container) container.innerHTML = '<p class="iss-text-muted mb-4">Nenhuma aula publicada ainda.</p><a href="index.html" class="iss-link hover:underline">Voltar à página inicial</a>';
         return;
       }
@@ -185,6 +188,10 @@ function initDisciplina() {
           <span>${escapeHtml(discipline.title)}</span>
         `;
       }
+
+      const readCount = typeof isLessonRead !== 'undefined' ? disciplineLessons.filter((l) => isLessonRead(d, l.slug)).length : 0;
+      const total = disciplineLessons.length;
+      if (progressEl) progressEl.textContent = `Progresso: ${readCount} / ${total} aulas`;
 
       if (container) {
         container.innerHTML = disciplineLessons
@@ -245,14 +252,16 @@ function initAula() {
         lesson,
         prevLesson,
         nextLesson,
+        lessonIndex: idx + 1,
+        totalLessons: disciplineLessons.length,
       }));
     })
     .then((data) => {
       if (!data) return;
-      const { raw, lesson, prevLesson, nextLesson } = data;
+      const { raw, lesson, prevLesson, nextLesson, lessonIndex, totalLessons } = data;
       return fetchDisciplines().then((disciplines) => {
         const discipline = getDiscipline(disciplines, d);
-        renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson });
+        renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson, lessonIndex, totalLessons });
       });
     })
     .catch(() => {

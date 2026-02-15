@@ -5,8 +5,8 @@
   --color-foreground: #fafafa;
   --color-muted: #a1a1aa;
   --color-border: #3f3f46;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
+  --color-accent: #4d7cd4;
+  --color-accent-hover: #6b9de6;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
@@ -54,6 +54,10 @@
 .iss-link-muted:hover {
   color: var(--color-accent);
   text-decoration: underline;
+}
+.iss-search-results-dropdown {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 /* Base */

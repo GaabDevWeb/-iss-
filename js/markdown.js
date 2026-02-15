@@ -130,7 +130,12 @@ function renderPrevNextNav(prevLesson, nextLesson, disciplineSlug) {
   return `<nav class="mt-8 pt-6 border-t iss-border flex justify-between text-sm" aria-label="Navegação entre aulas">${prevLink}${nextLink}</nav>`;
 }
 
-function renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson }) {
+function renderLessonClosure(readToggleHtml) {
+  const content = readToggleHtml ? `✓ Aula concluída, ${readToggleHtml}` : '✓ Aula concluída';
+  return `<div class="mt-8 pt-6 border-t iss-border"><p class="mb-0">${content}</p></div>`;
+}
+
+function renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson, lessonIndex, totalLessons }) {
   const { frontmatter, body } = parseFrontmatter(raw);
   const title = frontmatter.title || lesson.title;
 
@@ -157,22 +162,52 @@ function renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson }) {
     const lessonSlug = lesson.slug;
     const read = typeof isLessonRead !== 'undefined' && isLessonRead(disciplineSlug, lessonSlug);
     const readToggleLabel = read ? 'Desmarcar como lida' : 'Marcar como lida';
-    const readToggleHtml = `<p class="mb-4"><button type="button" id="iss-mark-read-toggle" class="text-sm iss-link border-0 bg-transparent cursor-pointer p-0 underline hover:no-underline">${escapeHtml(readToggleLabel)}</button></p>`;
+    const readToggleBtnHtml = `<button type="button" id="iss-mark-read-toggle" class="text-sm iss-link border-0 bg-transparent cursor-pointer p-0 underline hover:no-underline">${escapeHtml(readToggleLabel)}</button>`;
 
     const words = body.trim().split(/\s+/).filter(Boolean).length;
     const readingMinutes = frontmatter.readingMinutes != null
       ? Math.max(1, parseInt(frontmatter.readingMinutes, 10) || 1)
       : Math.max(1, Math.ceil(words / 200));
-    const readingTimeHtml = `<p class="iss-reading-time iss-text-muted text-sm mb-4">~${readingMinutes} min de leitura</p>`;
+    const exerciseCount = (frontmatter.exercises || []).length;
+    const readingTimeText = exerciseCount > 0
+      ? `~${readingMinutes} min de leitura, ${exerciseCount} exercícios`
+      : `~${readingMinutes} min de leitura`;
+    const readingTimeHtml = `<p class="iss-reading-time iss-text-muted text-sm mb-4">${readingTimeText}</p>`;
     const bodyHtml = renderBody(body);
     const reviewedIds = typeof getReviewedExerciseIds !== 'undefined' ? getReviewedExerciseIds() : new Set();
     const exercisesHtml = renderExercisesHTML(frontmatter.exercises || [], disciplineSlug, lesson.slug, reviewedIds);
+    const closureHtml = renderLessonClosure(readToggleBtnHtml);
     const prevNextHtml = renderPrevNextNav(prevLesson || null, nextLesson || null, disciplineSlug);
-    contentEl.innerHTML = `${readingTimeHtml}${readToggleHtml}<nav class="mb-6 text-sm" aria-label="Nesta página"><a href="#resumo" class="iss-link-muted mr-3">Resumo</a><a href="#explicacoes" class="iss-link-muted mr-3">Explicações</a><a href="#exercicios" class="iss-link-muted">Exercícios</a></nav><div class="iss-prose">${bodyHtml}</div>${exercisesHtml}${prevNextHtml}`;
+    contentEl.innerHTML = `${readingTimeHtml}<nav class="mb-6 text-sm" aria-label="Nesta página"><a href="#resumo" class="iss-link hover:underline">Resumo</a><span class="iss-text-muted mx-1" aria-hidden="true">·</span><a href="#explicacoes" class="iss-link hover:underline">Explicações</a><span class="iss-text-muted mx-1" aria-hidden="true">·</span><a href="#exercicios" class="iss-link hover:underline">Exercícios</a></nav><div class="iss-prose">${bodyHtml}</div>${exercisesHtml}${closureHtml}${prevNextHtml}`;
     contentEl.querySelectorAll('img').forEach((img) => img.setAttribute('loading', 'lazy'));
     contentEl.querySelectorAll('iframe').forEach((iframe) => iframe.setAttribute('loading', 'lazy'));
     highlightCodeBlocks(contentEl);
     ensureSectionIds(contentEl);
+    const resumoH2 = contentEl.querySelector('#resumo');
+    if (resumoH2) {
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'text-sm iss-link border-0 bg-transparent cursor-pointer p-0 underline hover:no-underline block mb-7';
+      copyBtn.textContent = 'Copiar resumo';
+      copyBtn.addEventListener('click', () => {
+        const explicacoesEl = contentEl.querySelector('#explicacoes');
+        let node = resumoH2.nextSibling;
+        const parts = [];
+        while (node && node !== explicacoesEl) {
+          if (node.nodeType === Node.ELEMENT_NODE && node.innerText) parts.push(node.innerText);
+          node = node.nextSibling;
+        }
+        const bodyText = parts.join('\n\n');
+        const text = (resumoH2.innerText ? resumoH2.innerText + '\n\n' : '') + bodyText;
+        if (text && navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.textContent = 'Copiado!';
+            setTimeout(() => { copyBtn.textContent = 'Copiar resumo'; }, 2000);
+          });
+        }
+      });
+      resumoH2.after(copyBtn);
+    }
     contentEl.querySelectorAll('.iss-exercise').forEach((block) => {
       const details = block.querySelector('details');
       const id = block.getAttribute('data-exercise-id');
