@@ -1,0 +1,7 @@
+{"location":"app.js:initAula","message":"initAula params","data":{"d":"python","a":"introducao","pathname":"/aula.html","href":"http://127.0.0.1:5500/aula.html?d=python&a=introducao"},"timestamp":1771193131893,"hypothesisId":"H2,H3"}
+{"location":"content.js","message":"fetchJSON request","data":{"pathname":"/aula.html","path":"lessons.json","fullUrl":"http://127.0.0.1:5500/content/lessons.json"},"timestamp":1771193131894,"hypothesisId":"H1"}
+{"location":"app.js:getLesson","message":"getLesson result","data":{"lessonFound":true,"lessonFile":"aula-01-introducao.md","disciplineSlug":"python"},"timestamp":1771193131926,"hypothesisId":"H1,H3"}
+{"location":"content.js","message":"fetchLessonMarkdown","data":{"pathname":"/aula.html","disciplineSlug":"python","filename":"aula-01-introducao.md","relativePath":"python/aula-01-introducao.md"},"timestamp":1771193131927,"hypothesisId":"H5"}
+{"location":"content.js","message":"fetchText request","data":{"pathname":"/aula.html","path":"python/aula-01-introducao.md","fullUrl":"http://127.0.0.1:5500/content/python/aula-01-introducao.md"},"timestamp":1771193131927,"hypothesisId":"H1,H2,H4"}
+{"location":"content.js","message":"fetchJSON request","data":{"pathname":"/aula.html","path":"disciplines.json","fullUrl":"http://127.0.0.1:5500/content/disciplines.json"},"timestamp":1771193131938,"hypothesisId":"H1"}
+{"location":"app.js:initAula.catch","message":"initAula catch","data":{"errMessage":"Failed to fetch","errName":"TypeError"},"timestamp":1771193131948,"hypothesisId":"H4,H5"}
