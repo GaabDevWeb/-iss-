@@ -1,12 +1,12 @@
 /* ISS — Design tokens (DESIGN-GUIDELINES.md) — tema dark */
 :root {
-  --color-background: #18181b;
+  --color-background: #1E1E1E;
   --color-surface: #27272a;
-  --color-foreground: #fafafa;
+  --color-foreground: #DADADA;
   --color-muted: #a1a1aa;
   --color-border: #3f3f46;
-  --color-accent: #4d7cd4;
-  --color-accent-hover: #6b9de6;
+  --color-accent: #5B88B2;
+  --color-accent-hover: rgb(130, 170, 230);
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
