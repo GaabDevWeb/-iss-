@@ -2,25 +2,25 @@
   {
     "slug": "python",
     "title": "Python",
-    "description": "Introdução à linguagem",
+    "description": "Fundamentos de programação com Python e manipulação de dados.",
     "order": 1
   },
   {
     "slug": "visualizacao-sql",
     "title": "Introdução à Visualização de Dados e SQL",
-    "description": "Looker Studio e SQL",
+    "description": "Consultas SQL e criação de dashboards com Looker Studio.",
     "order": 3
   },
   {
     "slug": "planejamento-curso-carreira",
     "title": "Planejamento de Curso e Carreira",
-    "description": "Carreira em TI, currículo, LinkedIn e modelo da instituição",
+    "description": "Planejamento de carreira, currículo e posicionamento profissional em tecnologia.",
     "order": 4
   },
   {
     "slug": "projeto-bloco",
     "title": "Projeto de Bloco — Fundamentos de Processamento de Dados",
-    "description": "Integração Python, SQL e visualização; metodologias de projeto; Live Coding",
+    "description": "Projeto prático integrando Python, SQL e visualização de dados.",
     "order": 5
   }
 ]
