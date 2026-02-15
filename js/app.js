@@ -44,7 +44,10 @@ function initHome() {
     return flat.filter(
       (item) =>
         item.lesson.title.toLowerCase().includes(qLower) ||
-        (item.discipline && item.discipline.title.toLowerCase().includes(qLower))
+        (item.discipline && (
+          item.discipline.title.toLowerCase().includes(qLower) ||
+          (item.discipline.professor && item.discipline.professor.toLowerCase().includes(qLower))
+        ))
     );
   }
 
@@ -59,21 +62,21 @@ function initHome() {
     }
     searchResultsEl.classList.remove('hidden');
     if (matches.length === 0) {
-      searchResultsEl.innerHTML = '<p class="iss-text-muted text-sm">Nenhuma aula encontrada.</p>';
+      searchResultsEl.innerHTML = '<p class="iss-text-muted text-sm py-1">Nenhuma aula encontrada.</p>';
     } else {
       searchResultsEl.innerHTML =
-        '<ul class="space-y-2">' +
+        '<ul class="iss-search-results-list">' +
         matches
           .map(
             (item) =>
-              '<li><a href="aula.html?d=' +
+              '<li class="iss-search-result-item">' +
+              '<a href="aula.html?d=' +
               encodeURIComponent(item.lesson.discipline) +
               '&a=' +
               encodeURIComponent(item.lesson.slug) +
-              '" class="iss-link hover:underline">' +
-              escapeHtml(item.discipline.title) +
-              ' › ' +
-              escapeHtml(item.lesson.title) +
+              '" class="iss-search-result-link block no-underline py-2.5 px-2 rounded">' +
+              '<span class="block text-xs iss-text-muted mb-0.5">' + escapeHtml(item.discipline.title) + '</span>' +
+              '<span class="block text-sm font-medium iss-text-foreground">' + escapeHtml(item.lesson.title) + '</span>' +
               '</a></li>'
           )
           .join('') +
@@ -117,6 +120,7 @@ function initHome() {
       }
 
       if (searchInput && searchResultsEl) {
+        const searchWrapper = searchInput.closest('.relative');
         searchInput.addEventListener('input', () => runSearch(disciplines, lessons));
         searchInput.addEventListener('search', () => runSearch(disciplines, lessons));
         searchInput.addEventListener('keydown', (e) => {
@@ -131,6 +135,11 @@ function initHome() {
             encodeURIComponent(first.lesson.discipline) +
             '&a=' +
             encodeURIComponent(first.lesson.slug);
+        });
+        document.addEventListener('click', (e) => {
+          if (searchResultsEl.classList.contains('hidden')) return;
+          if (searchWrapper && searchWrapper.contains(e.target)) return;
+          searchResultsEl.classList.add('hidden');
         });
       }
     })

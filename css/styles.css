@@ -29,6 +29,26 @@
   --max-w-read: 65ch;
 }
 
+/* Scrollbar padrão do projeto */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-background);
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
 /* Utility classes baseadas nos tokens */
 .iss-text-foreground {
   color: var(--color-foreground);
@@ -58,6 +78,23 @@
 .iss-search-results-dropdown {
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
+}
+.iss-search-results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.iss-search-result-link {
+  transition: background 0.5s ease;
+}
+.iss-search-result-link span.iss-text-foreground {
+  transition: color 0.5s ease;
+}
+.iss-search-result-link:hover {
+  background: rgba(63, 63, 70, 0.35);
+}
+.iss-search-result-link:hover span.iss-text-foreground {
+  color: var(--color-accent);
 }
 
 /* Base */
