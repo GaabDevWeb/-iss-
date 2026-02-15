@@ -232,6 +232,10 @@ function initAula() {
   const titleEl = document.getElementById('lesson-title');
   const breadcrumbEl = document.getElementById('breadcrumb-aula');
 
+  // #region agent log
+  fetch('http://127.0.0.1:7244/ingest/a1df76ee-37a5-4177-b72b-ed8c0644a45c', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app.js:initAula', message: 'initAula params', data: { d, a, pathname: typeof location !== 'undefined' ? location.pathname : '', href: typeof location !== 'undefined' ? location.href : '' }, timestamp: Date.now(), hypothesisId: 'H2,H3' }) }).catch(function() {});
+  // #endregion
+
   function showAulaError(msg) {
     document.title = 'Aula não encontrada — ISS';
     if (titleEl) titleEl.textContent = 'Aula não encontrada';
@@ -247,6 +251,9 @@ function initAula() {
   fetchLessons()
     .then((lessons) => {
       const lesson = getLesson(lessons, d, a);
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/a1df76ee-37a5-4177-b72b-ed8c0644a45c', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app.js:getLesson', message: 'getLesson result', data: { lessonFound: !!lesson, lessonFile: lesson ? lesson.file : null, disciplineSlug: d }, timestamp: Date.now(), hypothesisId: 'H1,H3' }) }).catch(function() {});
+      // #endregion
       if (!lesson) {
         showAulaError('Esta aula não existe.');
         return null;
@@ -273,7 +280,10 @@ function initAula() {
         renderAulaPage({ raw, lesson, discipline, prevLesson, nextLesson, lessonIndex, totalLessons });
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/a1df76ee-37a5-4177-b72b-ed8c0644a45c', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app.js:initAula.catch', message: 'initAula catch', data: { errMessage: err && err.message, errName: err && err.name }, timestamp: Date.now(), hypothesisId: 'H4,H5' }) }).catch(function() {});
+      // #endregion
       showAulaError('Erro ao carregar o conteúdo da aula.');
     });
 }

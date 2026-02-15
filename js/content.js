@@ -32,11 +32,11 @@ async function fetchJSON(path) {
 async function fetchText(path) {
   var fullUrl = typeof location !== 'undefined' ? (new URL(CONTENT_BASE + '/' + path, location.href)).href : CONTENT_BASE + '/' + path;
   // #region agent log
-  _log('fetchText request', { path: path, fullUrl: fullUrl }, 'H2');
+  _log('fetchText request', { path: path, fullUrl: fullUrl }, 'H1,H2,H4');
   // #endregion
   const res = await fetch(`${CONTENT_BASE}/${path}`);
   // #region agent log
-  if (!res.ok) _log('fetchText failed', { path: path, fullUrl: fullUrl, status: res.status }, 'H4');
+  if (!res.ok) _log('fetchText failed', { path: path, fullUrl: fullUrl, status: res.status }, 'H4,H5');
   // #endregion
   if (!res.ok) throw new Error(`Failed to load ${path}`);
   return res.text();
