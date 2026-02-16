@@ -259,3 +259,38 @@ button:focus-visible {
   color: var(--color-accent-hover);
   border-color: var(--color-muted);
 }
+
+/* Modo foco: esconde header, footer, breadcrumb e back-to-top; só conteúdo */
+.iss-focus-exit {
+  display: none;
+}
+body.iss-focus-mode .iss-header,
+body.iss-focus-mode footer,
+body.iss-focus-mode [id^="breadcrumb-"],
+body.iss-focus-mode .iss-back-to-top {
+  display: none !important;
+}
+body.iss-focus-mode .iss-focus-exit {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 0.5rem 1rem;
+  font-size: var(--text-small);
+  color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  box-shadow: var(--shadow-card);
+}
+body.iss-focus-mode .iss-focus-exit:hover {
+  color: var(--color-accent-hover);
+  border-color: var(--color-muted);
+}

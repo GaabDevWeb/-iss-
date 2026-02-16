@@ -13,8 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen flex flex-col">
-  <header class="iss-header flex items-center px-4 md:px-6 sticky top-0 z-10">
+  <header class="iss-header flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
     <a href="index.html" class="font-semibold iss-link no-underline">ISS</a>
+    <button type="button" id="iss-focus-toggle" class="text-sm iss-link border border-current rounded px-3 py-1.5 bg-transparent cursor-pointer hover:opacity-90">Modo foco</button>
   </header>
 
   <main class="flex-1 px-4 md:px-6 py-8 md:py-12 max-w-3xl mx-auto w-full">
@@ -35,6 +36,8 @@
   </footer>
 
   <a href="#" id="iss-back-to-top" class="iss-back-to-top" aria-label="Voltar ao topo" style="display: none;">Voltar ao topo</a>
+
+  <button type="button" id="iss-focus-exit" class="iss-focus-exit" aria-label="Sair do modo foco" style="display: none;">Sair do modo foco</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

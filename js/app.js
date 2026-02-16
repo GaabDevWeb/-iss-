@@ -4,6 +4,18 @@
 
 const LAST_VISITED_KEY = 'iss-last-visited';
 
+/** Minutos por aula quando não definido nos dados (estimativa padrão). */
+const DEFAULT_MINUTES_PER_LESSON = 20;
+
+function formatDurationMinutes(totalMinutes) {
+  if (totalMinutes <= 0) return '~0 min';
+  if (totalMinutes < 60) return `~${totalMinutes} min`;
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+  if (m === 0) return `~${h}h`;
+  return `~${h}h${m}`;
+}
+
 function getParam(name) {
   return typeof Router !== 'undefined' ? Router.getParam(name) : new URLSearchParams(window.location.search).get(name) || '';
 }
@@ -200,7 +212,19 @@ function initDisciplina() {
 
       const readCount = typeof isLessonRead !== 'undefined' ? disciplineLessons.filter((l) => isLessonRead(d, l.slug)).length : 0;
       const total = disciplineLessons.length;
-      if (progressEl) progressEl.textContent = `Progresso: ${readCount} / ${total} aulas`;
+      const totalMinutes = total * DEFAULT_MINUTES_PER_LESSON;
+      const remainingMinutes = (total - readCount) * DEFAULT_MINUTES_PER_LESSON;
+      const progressPercent = total > 0 ? Math.round((readCount / total) * 100) : 0;
+
+      if (progressEl) {
+        progressEl.innerHTML =
+          '<span class="block">' +
+          total + ' aula' + (total !== 1 ? 's' : '') + ' · ' + formatDurationMinutes(totalMinutes) + ' totais' +
+          '</span>' +
+          '<span class="block mt-1">' +
+          'Progresso: ' + progressPercent + '% · Tempo restante: ' + formatDurationMinutes(remainingMinutes) +
+          '</span>';
+      }
 
       if (container) {
         container.innerHTML = disciplineLessons
@@ -307,7 +331,27 @@ function initBackToTop() {
   });
 }
 
+function initFocusMode() {
+  const toggle = document.getElementById('iss-focus-toggle');
+  const exitBtn = document.getElementById('iss-focus-exit');
+  if (!toggle) return;
+
+  function setFocusMode(active) {
+    if (active) {
+      document.body.classList.add('iss-focus-mode');
+      if (exitBtn) exitBtn.style.display = '';
+    } else {
+      document.body.classList.remove('iss-focus-mode');
+      if (exitBtn) exitBtn.style.display = 'none';
+    }
+  }
+
+  toggle.addEventListener('click', () => setFocusMode(true));
+  if (exitBtn) exitBtn.addEventListener('click', () => setFocusMode(false));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initFocusMode();
   const page = getPageType();
   if (page === 'home') initHome();
   else if (page === 'disciplina') {
